@@ -7,7 +7,7 @@ The project contains the following directories:
  include  *.h (header) files are stored here
  
 To compile the program:
- Open terminal, type make and press enter in the project directory.
+ Open terminal, type "make" and press enter in the project directory.
  
 To execute the compiled file:
- Type ./bin/snakes and press enter in the project directory.
+ Type "./bin/snakes" and press enter in the project directory.
