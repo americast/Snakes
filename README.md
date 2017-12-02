@@ -12,7 +12,7 @@ A simple game of snakes implemented in OpenCV and C++.
 `make`
 
 ## Execution
-`./snakes`
+`./bin/snakes`
 
 >Well, I had made this game before I came across version control, I guess in October 2016.  
 >Hence, commit history starts pretty late.
