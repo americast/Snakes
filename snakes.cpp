@@ -20,7 +20,7 @@ void exitnow()
   {
     cout<<"You have got a new high score!"<<endl;
     ofstream fout;
-    fout.open("snake.txt",ios::out);
+    fout.open("snake.txt",ios::out| ios::binary);
     fout<<score;
     fout.close();
   }
@@ -236,7 +236,7 @@ void itoa(int num, char ch[])
 int main()
 {
     ifstream fin;
-    fin.open("snake.txt",ios::in);
+    fin.open("snake.txt",ios::in|ios::binary);
     fin>>scoreold;
     fin.close();
     arrx=(int *)malloc(len*sizeof(int));
