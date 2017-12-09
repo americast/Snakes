@@ -6,25 +6,24 @@
 #include<string.h>
 #include<time.h>
 
-using namespace cv;
-using namespace std;
-Mat img;
+
+cv::Mat img;
 int len=60*4, dir=2, posx=400, posy=300, *arrx, *arry, scoreold=0,
 fx,fy,fc=1,leninc=20,score=0,oldvalue=10,slim=0,level=4,count=0,
 showbonus=0,bx,by,bc=0,levelstat=0;
 
 void exitnow()
 {
-  cout<<"Game Over!\nScore: "<<score<<endl;
+  std::cout<<"Game Over!\nScore: "<<score<<std::endl;
   if (score>scoreold)
   {
-    cout<<"You have got a new high score!"<<endl;
-    ofstream fout;
-    fout.open("snake.txt",ios::out);
+    std::cout<<"You have got a new high score!"<<std::endl;
+    std::ofstream fout;
+    fout.open("snake.txt",std::ios::out);
     fout<<score;
     fout.close();
   }
-  cout<<"Gramercy..."<<endl;
+  std::cout<<"Gramercy..."<<std::endl;
   exit(0);
 }
 
@@ -235,8 +234,8 @@ void itoa(int num, char ch[])
 
 int main()
 {
-    ifstream fin;
-    fin.open("snake.txt",ios::in);
+    std::ifstream fin;
+    fin.open("snake.txt",std::ios::in);
     fin>>scoreold;
     fin.close();
     arrx=(int *)malloc(len*sizeof(int));
@@ -246,16 +245,16 @@ int main()
       arrx[i]=posx-i;
       arry[i]=posy;
     }
-    img = Mat::zeros(600,800, CV_8U);
-    namedWindow("Snakes",1);
-    createTrackbar( "Level: ", "Snakes", &level, 10,a);
+    img = cv::Mat::zeros(600,800, CV_8U);
+    cv::namedWindow("Snakes",1);
+    cv::createTrackbar( "Level: ", "Snakes", &level, 10,a);
     while(1)
     {
       if ((score%10) == 0 && level !=10 && score!=0 && levelstat==0) {level++;a(level,NULL);levelstat=1;}
       if (score%10==1 || score %10==2) levelstat=0;
       slim++;
       char ch='d';
-      ch=waitKey((101-level*10));
+      ch=cv::waitKey((101-level*10));
       if (ch=='p') score++;
       if (ch=='\n') exitnow();
       if (ch==' ') fc=1;
@@ -273,9 +272,9 @@ int main()
       char sold[17]="Highest score: \0";
        itoa(scoreold,adder);
         strcat(sold,adder);// sold[15]=(char)(scoreold+'0'); sold[16]='\0';
-      Point p; p.x=0; p.y=20;
+      cv::Point p; p.x=0; p.y=20;
       putText(img,s,p,0,0.5,255);
       p.x=630; putText(img,sold,p,0,0.5,255);
-      imshow("Snakes", img);
+      cv::imshow("Snakes", img);
     }
 }
