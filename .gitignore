@@ -1,2 +1,6 @@
+#Compiled
 snake.txt
-snakes
+bin/snakes
+
+#object
+obj/
