@@ -351,11 +351,12 @@ void incLen()
 
 void checkFood()
 {
-  int flag=0;
+  int flag=0, k;
   for (int i=fx-(12-level);i<=fx+(12-level);i++)
     for (int j=fy-(12-level);j<=fy+(12-level);j++)
-      if (arrx[0]==i && arry[0]==j)
-       {flag=1; break;}
+      for(k=0;k<len;k++)
+        if (arrx[k]==i && arry[k]==j)
+         {flag=1; break;}
   if (flag==1)
     {incLen(); score++; if (score%4==0) {showbonus=1;bc=1;} fc=1;}
 }
@@ -397,10 +398,11 @@ void printBonus()
 
 void checkBonus()
 {
-  int flag=0;
+  int flag=0, k;
   for (int i=bx-6;i<=bx+6;i++)
     for (int j=by-6;j<=by+6;j++)
-      if (arrx[0]==i && arry[0]==j)
+      for (k=0;k<len;k++)
+      if (arrx[k]==i && arry[k]==j)
        {flag=1; break;}
   if (flag==1)
     {incLen(); incLen();score+=2; if (score%4==0) {showbonus=1;bc=1;} showbonus=0; bc=0;}
