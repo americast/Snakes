@@ -404,11 +404,11 @@ void checkBonus()
        {flag=1; break;}
   if (flag==1)
     {incLen(); incLen();score+=2; if (score%4==0) {showbonus=1;bc=1;} showbonus=0; bc=0;}
-  if (bc>650) {showbonus=0;bc=0;}
+  if (bc>80) {showbonus=0;bc=0;}
 }
 
 void itoa(int num, char ch[])
-{
+{ 
     if (num==0)  {ch[0]='0'; ch[1]='\0'; return;}
     int c=0;
     while (num!=0)
