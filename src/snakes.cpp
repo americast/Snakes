@@ -7,6 +7,7 @@
 #include<time.h>
 #include<sstream> //library used for integer to string conversion
 
+using namespace std;
 cv::Mat img;
 int len=60*4, dir=2, posx=400, posy=300, *arrx, *arry, scoreold=0,
 fx,fy,fc=1,leninc=20,score=0,oldvalue=10,slim=0,level=4,count=0,
@@ -242,7 +243,7 @@ void setPos()
     for (int i=len-1;i>0;i--)
       arry[i]=arry[i-1];
     arrx[0]-=1;
-    if (arrx[0]<0) arrx[0]=799;
+    if (arrx[0]<3) exitnow();
   }
   if (dir==2)
   {
@@ -251,7 +252,7 @@ void setPos()
     for (int i=len-1;i>0;i--)
       arry[i]=arry[i-1];
     arrx[0]+=1;
-    if (arrx[0]>799) arrx[0]=0;
+    if (arrx[0]>797) exitnow();
   }
   if (dir==3)
   {
@@ -260,7 +261,7 @@ void setPos()
     for (int i=len-1;i>0;i--)
       arrx[i]=arrx[i-1];
     arry[0]-=1;
-    if (arry[0]<0) arry[0]=599;
+    if (arry[0]<3) exitnow();
   }
   if (dir==4)
   {
@@ -269,7 +270,7 @@ void setPos()
     for (int i=len-1;i>0;i--)
       arrx[i]=arrx[i-1];
     arry[0]+=1;
-    if (arry[0]>599) arry[0]=0;
+    if (arry[0]>597) exitnow();
   }
 }
 
@@ -291,12 +292,17 @@ void sprint()
 {
   for (int i=0;i<img.rows;i++)
     for (int j=0; j<img.cols;j++)
-      img.at<uchar>(i, j) = 0;
+      if((j<=4)||(j>=img.cols-5)||(i<=4)||(i>=img.rows-5))
+        img.at<uchar>(i,j) = 123;
+      else     
+        img.at<uchar>(i, j) = 0;
+
   for (int i=0;i<len;i++)
   {
     int x=arrx[i],y=arry[i];
     img.at<uchar>(y, x) = 255;
   }
+
 }
 
 void incLen()
