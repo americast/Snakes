@@ -17,11 +17,11 @@ std::ostringstream sha_temp; // a temporary variable to convert int to string
 /* A class for implementing SHA-256
    having some functions which are declared later.
 
-   The function which calculates the SHA of a 
+   The function which calculates the SHA of a
    string => sha256(std::string)[declared later]
    uses these functions as utility functions
 
-   Apart from these some definitions are also there.   	
+   Apart from these some definitions are also there.
 */
 class SHA256
 {
@@ -29,7 +29,7 @@ protected:
     typedef unsigned char uint8;
     typedef unsigned int uint32;
     typedef unsigned long long uint64;
- 
+
     const static uint32 sha256_k[];
     static const unsigned int SHA224_256_BLOCK_SIZE = (512/8);
 public:
@@ -37,7 +37,7 @@ public:
     void update(const unsigned char *message, unsigned int len);
     void final(unsigned char *digest);
     static const unsigned int DIGEST_SIZE = ( 256 / 8);
- 
+
 protected:
     void transform(const unsigned char *message, unsigned int block_nb);
     unsigned int m_tot_len;
@@ -46,7 +46,7 @@ protected:
     uint32 m_h[8];
 };
 
-//Some definitions used 
+//Some definitions used
 #define SHA2_SHFR(x, n)    (x >> n)
 #define SHA2_ROTR(x, n)   ((x >> n) | (x << ((sizeof(x) << 3) - n)))
 #define SHA2_ROTL(x, n)   ((x << n) | (x >> ((sizeof(x) << 3) - n)))
@@ -127,7 +127,7 @@ void SHA256::transform(const unsigned char *message, unsigned int block_nb)
         }
     }
 }
- 
+
 void SHA256::init()
 {
     m_h[0] = 0x6a09e667;
@@ -141,7 +141,7 @@ void SHA256::init()
     m_len = 0;
     m_tot_len = 0;
 }
- 
+
 void SHA256::update(const unsigned char *message, unsigned int len)
 {
     unsigned int block_nb;
@@ -164,7 +164,7 @@ void SHA256::update(const unsigned char *message, unsigned int len)
     m_len = rem_len;
     m_tot_len += (block_nb + 1) << 6;
 }
- 
+
 void SHA256::final(unsigned char *digest)
 {
     unsigned int block_nb;
@@ -183,24 +183,24 @@ void SHA256::final(unsigned char *digest)
         SHA2_UNPACK32(m_h[i], &digest[i << 2]);
     }
 }
- 
+
 //Function for calculating SHA-256 of a string
 std::string sha256(std::string input)
 {
     unsigned char digest[SHA256::DIGEST_SIZE];
     memset(digest,0,SHA256::DIGEST_SIZE);
- 
+
     SHA256 ctx = SHA256();
     ctx.init();
     ctx.update( (unsigned char*)input.c_str(), input.length());
     ctx.final(digest);
- 
+
     char buf[2*SHA256::DIGEST_SIZE+1];
     buf[2*SHA256::DIGEST_SIZE] = 0;
     for (unsigned int i = 0; i < SHA256::DIGEST_SIZE; i++)
         sprintf(buf+i*2, "%02x", digest[i]);
     return std::string(buf);
-} 
+}
 
 void exitnow()
 {
@@ -234,7 +234,7 @@ void setDir(char a)
 
 void setPos()
 {
- 
+
   if (dir==1)
   {
     for (int i=len-1;i>0;i--)
@@ -410,7 +410,7 @@ void checkBonus()
 }
 
 void itoa(int num, char ch[])
-{ 
+{
     if (num==0)  {ch[0]='0'; ch[1]='\0'; return;}
     int c=0;
     while (num!=0)
@@ -466,7 +466,7 @@ int main()
       char ch='d';
       ch=cv::waitKey((101-level*10));
       if (ch=='p') score++;
-      if (ch=='\n') exitnow();
+      if (ch=='\n' || ch == '\r') exitnow();
       if (ch==' ') fc=1;
       setDir(ch);
       for (int i=1; i<=8+(1.5*level);i++)
