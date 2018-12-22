@@ -11,7 +11,10 @@ More information can be found in the README-developers.txt file.
 
 ### Prerequisites
 * OpenCV needs to be installed on the System. For installing OpenCV 2
+1. Open Terminal on Ubuntu
+2. Type following codes
 ```
+sudo apt update
 sudo apt install libopencv-dev python-opencv
 ```  
 or if you wish to install OpenCV 3 follow the [guide](https://www.learnopencv.com/install-opencv3-on-ubuntu/).  
