@@ -202,11 +202,11 @@ std::string sha256(std::string input)
     return std::string(buf);
 } 
 
-void exitnow()
+void exitnow() //to exit the game
 {
   std::cout<<"Game Over!\nScore: "<<score<<std::endl;
 
-  if (score>scoreold)
+  if (score>scoreold)// if current score grater than last high score
   {
     std::cout<<"You have got a new high score!"<<std::endl;
     std::ofstream fout;
@@ -220,89 +220,89 @@ void exitnow()
   exit(0);
 }
 
-void setDir(char a)
+void setDir(char a) //to set direction
 {
-    if (a=='a' && dir!=2)
+    if (a=='a' && dir!=2) //when 'a' is pressed and snake is not moving towards right
       dir=1; //left
-    if (a=='d'  && dir!=1)
+    if (a=='d' && dir!=1) //when 'd' is pressed and snake is not moving towards left
       dir=2; //right
-    if (a=='w' && dir!=4)
+    if (a=='w' && dir!=4) //when 'w' is pressed and snake is not moving in the back(bottom) direction
       dir=3; //front
-    if (a=='s' && dir!=3)
+    if (a=='s' && dir!=3) //when 's' is pressed and direction is not moving in the front(up) direction
       dir=4; //back
 }
 
-void setPos()
+void setPos() //to set postion when direction keys are pressed
 {
  
-  if (dir==1)
+  if (dir==1) //left 
   {
     for (int i=len-1;i>0;i--)
       arrx[i]=arrx[i-1];
     for (int i=len-1;i>0;i--)
       arry[i]=arry[i-1];
-    arrx[0]-=1;
-    if (arrx[0]<0) arrx[0]=799;
+    arrx[0]-=1;//shifting head to left
+    if (arrx[0]<0) arrx[0]=799;//if snake is at the left wall, it will come out of right wall 
   }
-  if (dir==2)
+  if (dir==2)//right
   {
     for (int i=len-1;i>0;i--)
       arrx[i]=arrx[i-1];
     for (int i=len-1;i>0;i--)
       arry[i]=arry[i-1];
-    arrx[0]+=1;
-    if (arrx[0]>799) arrx[0]=0;
+    arrx[0]+=1;//shifting head to right
+    if (arrx[0]>799) arrx[0]=0;//if snake is at the right wall, it will come out of left wall 
   }
-  if (dir==3)
+  if (dir==3)//front(up)
   {
     for (int i=len-1;i>0;i--)
       arry[i]=arry[i-1];
     for (int i=len-1;i>0;i--)
       arrx[i]=arrx[i-1];
-    arry[0]-=1;
-    if (arry[0]<0) arry[0]=599;
+    arry[0]-=1;//shifting head to front
+    if (arry[0]<0) arry[0]=599;//if snake is at the bottom wall, it will come out of top wall
   }
-  if (dir==4)
+  if (dir==4)//down(bottom)
   {
     for (int i=len-1;i>0;i--)
       arry[i]=arry[i-1];
     for (int i=len-1;i>0;i--)
       arrx[i]=arrx[i-1];
-    arry[0]+=1;
-    if (arry[0]>599) arry[0]=0;
+    arry[0]+=1;//shifting head to down
+    if (arry[0]>599) arry[0]=0;//if snake is at the bottom wall, it will come out of top wall
   }
 }
 
-void giveFood()
+void giveFood()//to generate food
 {
   if (fc==1)
   {
     srand(::count);
-    fx=50+rand()%700;fy=50+rand()%500;
+    fx=50+rand()%700;fy=50+rand()%500;//random postion for food b/w 50 to 750 horizontal pixels and 50 to 550 verical pixels
     fc=0;
   }
-  for (int i=fx-(12-level);i<=fx+(12-level);i++)
-    for (int j=fy-(12-level);j<=fy+(12-level);j++)
-     img.at<uchar>(j, i) =200;
+  for (int i=fx-(12-level);i<=fx+(12-level);i++) //determining food's size according to the level(larger for low level and vice versa) 
+    for (int j=fy-(12-level);j<=fy+(12-level);j++)//used 12 to make sure food is visble in the last level(10)
+     img.at<uchar>(j, i) =200;//food's pixel colour(200) lighter than the snake(255)
   ::count++;
 }
 
-void sprint()
+void sprint()//to print the map and snake
 {
-  for (int i=0;i<img.rows;i++)
-    for (int j=0; j<img.cols;j++)
-      img.at<uchar>(i, j) = 0;
-  for (int i=0;i<len;i++)
+  for (int i=0;i<img.rows;i++)      //loop to
+    for (int j=0; j<img.cols;j++)   //print map
+      img.at<uchar>(i, j) = 0;//setting the pixels to black
+  for (int i=0;i<len;i++)//loop to print snake
   {
     int x=arrx[i],y=arry[i];
-    img.at<uchar>(y, x) = 255;
+    img.at<uchar>(y, x) = 255;//setting snake's pixel to white
   }
 }
 
-void incLen()
+void incLen()// to increase length
 {
-  int xd=arrx[len-2]-arrx[len-1];
-  int yd=arry[len-2]-arry[len-1];
+  int xd=arrx[len-2]-arrx[len-1];// determining the change in length
+  int yd=arry[len-2]-arry[len-1];// determining the change in width
   arrx=(int*)realloc(arrx,(len+leninc)*sizeof(int));
   arry=(int*)realloc(arry,(len+leninc)*sizeof(int));
   if (xd>0)
@@ -349,27 +349,29 @@ void incLen()
   slim=0;
 }
 
-void checkFood()
+void checkFood()// eating food and generaing bonus
 {
   int flag=0, k;
   for (int i=fx-(12-level);i<=fx+(12-level);i++)
     for (int j=fy-(12-level);j<=fy+(12-level);j++)
       for(k=0;k<len;k++)
-        if (arrx[k]==i && arry[k]==j)
+        if (arrx[k]==i && arry[k]==j)// check if snake's and food's coordinate are same
          {flag=1; break;}
   if (flag==1)
-    {incLen(); score++; if (score%4==0) {showbonus=1;bc=1;} fc=1;}
+    {
+      incLen(); score++; //increase length and score
+     if (score%4==0) {showbonus=1;bc=1;} fc=1;}// print bonus when score is divisible by 4
 }
 
-void gameOver()
+void gameOver()// to exit game
 {
   int lennow=len;
   if (slim>10)
     lennow-=5;
   int x=arrx[0],y=arry[0];
   for (int i=1;i<lennow;i++)
-    if (arrx[i]==x && arry[i]==y)
-    exitnow();
+    if (arrx[i]==x && arry[i]==y)//if snakes's head touches any part of its body 
+    exitnow();// game terminates
 }
 void a(int value, void*)
 {
@@ -385,31 +387,34 @@ void a(int value, void*)
      oldvalue=value;
 }
 
-void printBonus()
+void printBonus() // to print bonus 
 {
   if (bc==1)
-  {bx=50+rand()%700;by=50+rand()%500;}
+  {bx=50+rand()%700;by=50+rand()%500;} //genrating random position for bonus 
   if ((bc/10)%2==0)
-    for (int i=bx-6;i<=bx+6;i++)
-    for (int j=by-6;j<=by+6;j++)
-       img.at<uchar>(j, i) =200;
+    for (int i=bx-6;i<=bx+6;i++) // bx: x-cordinate of bonus
+    for (int j=by-6;j<=by+6;j++) // by: y-cordinate of bonus
+       img.at<uchar>(j, i) =200;// printing bonus 
   bc++;
 }
 
-void checkBonus()
+void checkBonus()//to eat bonus
 {
   int flag=0, k;
   for (int i=bx-6;i<=bx+6;i++)
     for (int j=by-6;j<=by+6;j++)
       for (k=0;k<len;k++)
-      if (arrx[k]==i && arry[k]==j)
+      if (arrx[k]==i && arry[k]==j)// if snake's and bonus' coordinte are same
        {flag=1; break;}
   if (flag==1)
-    {incLen(); incLen();score+=2; if (score%4==0) {showbonus=1;bc=1;} showbonus=0; bc=0;}
+    {incLen(); incLen();// increase length by two
+      score+=2; // increase score by two
+      if (score%4==0) //if score divisible by 4
+       {showbonus=1;bc=1;} showbonus=0; bc=0;}
   if (bc>80) {showbonus=0;bc=0;}
 }
 
-void itoa(int num, char ch[])
+void itoa(int num, char ch[])// converting integer to alphabets
 { 
     if (num==0)  {ch[0]='0'; ch[1]='\0'; return;}
     int c=0;
@@ -455,8 +460,8 @@ int main()
       arrx[i]=posx-i;
       arry[i]=posy;
     }
-    img = cv::Mat::zeros(600,800, CV_8U);
-    cv::namedWindow("Snakes",1);
+    img = cv::Mat::zeros(600,800, CV_8U); // creating the map
+    cv::namedWindow("Snakes",1);// creating display window
     cv::createTrackbar( "Level: ", "Snakes", &level, 10,a);
     while(1)
     {
@@ -465,11 +470,11 @@ int main()
       slim++;
       char ch='d';
       ch=cv::waitKey((101-level*10));
-      if (ch=='p') score++;
-      if (ch=='\n') exitnow();
-      if (ch==' ') fc=1;
+      if (ch=='p') score++; // if p is pressed increase score by 1
+      if (ch=='\n') exitnow(); // enter key for instant exit
+      if (ch==' ') fc=1;// space key for producing food at different location  
       setDir(ch);
-      for (int i=1; i<=8+(1.5*level);i++)
+      for (int i=1; i<=8+(1.5*level);i++)//loop to decide speed depending on level
         setPos();
       gameOver();
       sprint();
