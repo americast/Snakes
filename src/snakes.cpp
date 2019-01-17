@@ -235,41 +235,57 @@ void setDir(char a) //to set direction
 void setPos() //to set postion when direction keys are pressed
 {
  
-  if (dir==1) //left 
+  if (dir==1) //left
   {
-    for (int i=len-1;i>0;i--)
+    for (int i=len-1;i>0;i--)//moving x-coordinate of snake towards left
       arrx[i]=arrx[i-1];
-    for (int i=len-1;i>0;i--)
+    for (int i=len-1;i>0;i--)//moving y-coordinate of snake towards left
       arry[i]=arry[i-1];
-    arrx[0]-=1;//shifting head to left
-    if (arrx[0]<0) arrx[0]=799;//if snake is at the left wall, it will come out of right wall 
+    arrx[0]-=1;
+    if(arrx[0]<14) exitnow();//terminate game if snake touches the wall
+    
+    if(arrx[0]<500 && arrx[0]>300)
+    {
+  	 if((arry[0]>250&&arry[0]<265) ||(arry[0]>335 && arry[0]<350)) exitnow();}
+    }
+  if (dir==2) //right
+  {
+    for (int i=len-1;i>0;i--)//moving x-coordinate of snake towards right
+      arrx[i]=arrx[i-1];
+    for (int i=len-1;i>0;i--)//moving y-coordinate of snake towards right
+      arry[i]=arry[i-1];
+    arrx[0]+=1;
+    if (arrx[0]>786) exitnow();//terminate game if snake touches the wall
+     if(arrx[0]<500&& arrx[0]>300)
+     {
+      if((arry[0]>250&&arry[0]<265) ||(arry[0]>335 && arry[0]<350)) exitnow(); }
+     }
+  if (dir==3) //front(up)
+  {
+    for (int i=len-1;i>0;i--)//moving x-coordinate of snake towards front(up)
+      arry[i]=arry[i-1];
+    for (int i=len-1;i>0;i--)//moving y-coordinate of snake towards front(up)
+      arrx[i]=arrx[i-1];
+    arry[0]-=1;
+    if (arry[0]<14) exitnow();//terminate game if snake touches the wall
+
+    if((arry[0]>=250&&arry[0]<=265) ||(arry[0]<350 && arry[0]>335))
+     {
+      if(arrx[0]<500&& arrx[0]>300) exitnow(); 
+     }
   }
-  if (dir==2)//right
+  if (dir==4) //down(bottom)
   {
-    for (int i=len-1;i>0;i--)
-      arrx[i]=arrx[i-1];
-    for (int i=len-1;i>0;i--)
+    for (int i=len-1;i>0;i--)//moving x-coordinate of snake towards down(bottom)
       arry[i]=arry[i-1];
-    arrx[0]+=1;//shifting head to right
-    if (arrx[0]>799) arrx[0]=0;//if snake is at the right wall, it will come out of left wall 
-  }
-  if (dir==3)//front(up)
-  {
-    for (int i=len-1;i>0;i--)
-      arry[i]=arry[i-1];
-    for (int i=len-1;i>0;i--)
+    for (int i=len-1;i>0;i--)//moving y-coordinate of snake towards down(bottom)
       arrx[i]=arrx[i-1];
-    arry[0]-=1;//shifting head to front
-    if (arry[0]<0) arry[0]=599;//if snake is at the bottom wall, it will come out of top wall
-  }
-  if (dir==4)//down(bottom)
-  {
-    for (int i=len-1;i>0;i--)
-      arry[i]=arry[i-1];
-    for (int i=len-1;i>0;i--)
-      arrx[i]=arrx[i-1];
-    arry[0]+=1;//shifting head to down
-    if (arry[0]>599) arry[0]=0;//if snake is at the bottom wall, it will come out of top wall
+    arry[0]+=1;
+    if (arry[0]>586) exitnow();//terminate game if snake touches the wall
+     if((arry[0]>250&&arry[0]<265) ||(arry[0]<350 && arry[0]>335))
+     {
+      if(arrx[0]<500&& arrx[0]>300) exitnow(); 
+   }
   }
 }
 
@@ -277,11 +293,14 @@ void giveFood()//to generate food
 {
   if (fc==1)
   {
-    srand(::count);
-    fx=50+rand()%700;fy=50+rand()%500;//random postion for food b/w 50 to 750 horizontal pixels and 50 to 550 verical pixels
+    do
+    {
+       srand(::count);
+       fx=50+rand()%700;fy=50+rand()%500;//random postion for food b/w 50 to 750 horizontal pixels and 50 to 550 vertical pixels
+    }while((fx>300&&fx<500)&&(fy>250&&fy<265));//to regenerate food's coordinate if they are on the mid-walls
     fc=0;
   }
-  for (int i=fx-(12-level);i<=fx+(12-level);i++) //determining food's size according to the level(larger for low level and vice versa) 
+  for (int i=fx-(12-level);i<=fx+(12-level);i++)//determining food's size according to the level(larger for low level and vice versa) 
     for (int j=fy-(12-level);j<=fy+(12-level);j++)//used 12 to make sure food is visble in the last level(10)
      img.at<uchar>(j, i) =200;//food's pixel colour(200) lighter than the snake(255)
   ::count++;
@@ -289,9 +308,17 @@ void giveFood()//to generate food
 
 void sprint()//to print the map and snake
 {
-  for (int i=0;i<img.rows;i++)      //loop to
-    for (int j=0; j<img.cols;j++)   //print map
-      img.at<uchar>(i, j) = 0;//setting the pixels to black
+  for (int i=0;i<img.rows;i++)//to print map with walls
+    for (int j=0; j<img.cols;j++)
+      if((j<=14)||(j>=img.cols-15)||(i<=14)||(i>=img.rows-15))//to print the bounday wall
+        img.at<uchar>(i,j) = 200;
+      else if(j>=300&&j<=500&&i>=img.rows/2-50&&i<=img.rows/2-35)//to print the upper mid-wall
+      	img.at<uchar>(i,j) = 200;
+      else if(j>=300&&j<=500&&i>=img.rows/2+35&&i<=img.rows/2+50)//to print the lower mid wall
+      	img.at<uchar>(i,j) = 200;
+      else     
+        img.at<uchar>(i, j) = 0;//to print map except wall
+
   for (int i=0;i<len;i++)//loop to print snake
   {
     int x=arrx[i],y=arry[i];
@@ -305,7 +332,7 @@ void incLen()// to increase length
   int yd=arry[len-2]-arry[len-1];// determining the change in width
   arrx=(int*)realloc(arrx,(len+leninc)*sizeof(int));
   arry=(int*)realloc(arry,(len+leninc)*sizeof(int));
-  if (xd>0)
+  if (xd>0)//to increase the length by 1 pixel when snake is moving towards left
   {
     for (int i=len;i<len+leninc;i++)
       {
@@ -315,7 +342,7 @@ void incLen()// to increase length
     for (int i=len;i<len+leninc;i++)
       arry[i]=arry[i-1];
   }
-  if (xd<0)
+  if (xd<0)//to increase the length by 1 pixel when snake is moving towards right
   {
     for (int i=len;i<len+leninc;i++)
       {
@@ -325,7 +352,7 @@ void incLen()// to increase length
     for (int i=len;i<len+leninc;i++)
       arry[i]=arry[i-1];
   }
-  if (yd>0)
+  if (yd>0)//to increase the length by 1 pixel when snake is moving upwards
   {
     for (int i=len;i<len+leninc;i++)
       {
@@ -335,7 +362,7 @@ void incLen()// to increase length
     for (int i=len;i<len+leninc;i++)
       arrx[i]=arrx[i-1];
   }
-  if (yd<0)
+  if (yd<0)//to increase the length by 1 pixel when snake is moving downwards
   {
     for (int i=len;i<len+leninc;i++)
       {
@@ -375,7 +402,7 @@ void gameOver()// to exit game
 }
 void a(int value, void*)
 {
-    printf("Level set to: %2d\n",value);
+    printf("Level set to: %2d\n",value);//to print the level on which game is being played
     if (value<oldvalue)
     {
     arrx=(int*)realloc(arrx,(len-leninc)*sizeof(int));
