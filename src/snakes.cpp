@@ -6,6 +6,10 @@
 #include<string.h>
 #include<time.h>
 #include<sstream> //library used for integer to string conversion
+#include "opencv2/opencv.hpp"
+#include "opencv2/highgui/highgui.hpp"
+
+using namespace cv;
 
 cv::Mat img;
 int len=60*4, dir=2, posx=400, posy=300, *arrx, *arry, scoreold=0,
@@ -16,11 +20,9 @@ std::ostringstream sha_temp; // a temporary variable to convert int to string
 
 /* A class for implementing SHA-256
    having some functions which are declared later.
-
    The function which calculates the SHA of a
    string => sha256(std::string)[declared later]
    uses these functions as utility functions
-
    Apart from these some definitions are also there.
 */
 class SHA256
@@ -204,17 +206,89 @@ std::string sha256(std::string input)
 
 void exitnow()
 {
-  std::cout<<"Game Over!\nScore: "<<score<<std::endl;
-
+  
   if (score>scoreold)
   {
-    std::cout<<"You have got a new high score!"<<std::endl;
+     img.setTo(Scalar(0,0,0));
+     namedWindow("Output",1);
+    //initialize a 400X1400 matrix of black pixels:
+     Mat output = Mat::zeros( 400, 1400
+    , CV_8UC3 );
+    char s[]=" Congratulation ! HIGH SCORE !! SCORE : \0 ";
+    std::string s1 = std::to_string(score);
+    char const *pchar = s1.c_str();
+    strcat(s,pchar);
+    //write text on the matrix:
+    putText(output,
+           s  ,
+            cvPoint(15,70),
+            FONT_HERSHEY_PLAIN,
+            3,
+            cvScalar(255,255,0),
+            4);
+
+            putText(output,
+            " Press Esc to Continue! "  ,
+            cvPoint(15,170),
+            FONT_HERSHEY_PLAIN,
+            3,
+            cvScalar(255,255,0),
+            4);
+    
+    //display the image:
+    imshow("Output", output);
+    
+    //wait for the user to press any key:
+  
+     waitKey(0);
+
+  std::cout<<"Game Over!\nScore: "<<score<<std::endl;
+  
     std::ofstream fout;
     fout.open("snake.txt",std::ios::out);
     sha_temp.str("");
     sha_temp << score;
     fout<<sha256(sha_temp.str());
     fout.close();
+  }
+  else
+  {
+      img.setTo(Scalar(0,0,0));
+     namedWindow("Output",1);
+    //initialize a 400X1400 matrix of black pixels:
+     Mat output = Mat::zeros( 400, 1400
+    , CV_8UC3 );
+    char s[]=" Congratulation ! SCORE : \0 ";
+    std::string s1 = std::to_string(score);
+    char const *pchar = s1.c_str();
+    strcat(s,pchar);
+    //write text on the matrix:
+    putText(output,
+           s  ,
+            cvPoint(15,70),
+            FONT_HERSHEY_PLAIN,
+            3,
+            cvScalar(255,255,0),
+            4);
+
+            putText(output,
+            " Press Esc to Continue! "  ,
+            cvPoint(15,170),
+            FONT_HERSHEY_PLAIN,
+            3,
+            cvScalar(255,255,0),
+            4);
+    
+    //display the image:
+    imshow("Output", output);
+    
+    //wait for the user to press any key:
+  
+     waitKey(0);
+
+  std::cout<<"Game Over!\nScore: "<<score<<std::endl;
+  
+   
   }
   std::cout<<"Gramercy..."<<std::endl;
   exit(0);
@@ -429,6 +503,9 @@ void itoa(int num, char ch[])
 
 int main()
 {
+
+ 
+
     std::ifstream fin;
     fin.open("snake.txt",std::ios::in);
     fin>>sha_score;
